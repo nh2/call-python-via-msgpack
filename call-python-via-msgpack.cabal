@@ -1,0 +1,43 @@
+name:                call-python-via-msgpack
+version:             0.1.0.0
+synopsis:            Call Python from Haskell by FFI-via-serialisation over MessagePack
+description:         Please see README.md
+homepage:            https://github.com/nh2/call-python-via-msgpack
+license:             MIT
+author:              Niklas Hambüchen <niklas@fpcomplete.com>
+maintainer:          Niklas Hambüchen <mail@nh2.me>
+copyright:           2017 FP Complete, Niklas Hambüchen
+category:            FFI
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+library
+  hs-source-dirs:      src
+  exposed-modules:     FFI.Python.MessagePack
+  build-depends:       base >= 4.7 && < 5
+                     , bytestring
+                     , cpython < 3
+                     , data-msgpack
+                     , text
+  ghc-options:         -Wall
+  default-language:    Haskell2010
+
+test-suite tests
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             Main.hs
+  build-depends:       base
+                     , call-python-via-msgpack
+                     , bytestring
+                     , cpython
+                     , data-msgpack
+                     , directory
+                     , filepath
+                     , text
+  ghc-options:         -Wall -threaded -rtsopts -with-rtsopts=-N
+  default-language:    Haskell2010
+
+source-repository head
+  type:     git
+  location: https://github.com/nh2/call-python-via-msgpack
