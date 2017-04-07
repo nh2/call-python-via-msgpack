@@ -40,7 +40,7 @@ main = do
     T.putStrLn ("Setting Python path to: " <> updatedPytonpath <> "\n")
     Py.setPath updatedPytonpath
 
-    examplemodule <- Py.importModule "examplemodule27"
+    examplemodule <- Py.importModule "exampleparentmodule.examplemodule27"
     f1 <- Py.getAttribute examplemodule =<< Py.toUnicode "f1"
     res <- Py.callArgs f1 []
 
@@ -55,7 +55,7 @@ main = do
     -- Explicit interface
 
     resMsgpack <- callViaSerialization
-      "examplemodule27"
+      "exampleparentmodule.examplemodule27"
       "f2"
       (encode ("hello" :: String, "world" :: ByteString))
       (encode (M.ObjectMap [ (M.toObject ("stringKey" :: Text), M.toObject ("value" :: ByteString))
@@ -68,7 +68,7 @@ main = do
 
     putStrLn ""
 
-    let f2 = callViaSerializationPretty "examplemodule27" "f2"
+    let f2 = callViaSerializationPretty "exampleparentmodule.examplemodule27" "f2"
 
     res <- f2 ("hello" :: String, "world" :: ByteString)
       [ "stringKey" =: ("value" :: ByteString)
