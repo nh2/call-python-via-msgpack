@@ -21,3 +21,22 @@ You can NOT use this library when:
 * You want to pass some buffers in a zero-copy fashion
 
 In those cases, you should directly use the more low-level `cpython` package (Haskell library around the Python C API, on top of which this package is built).
+
+## Using it from ghci
+
+Depending on the operating system, using e.g. `ghci -lpython2.7` may not be enough to make this library work from ghci. For example, on Ubuntu 16.04 it works, but on Centos 7.3 it doesn't, failing with error messages such as
+
+```
+undefined symbol: _Py_ZeroStruct
+```
+
+This is because when ghci loads shared libraries, [it does so with the `RTLD_LOCAL` flag](https://github.com/ghc/ghc/blob/ce66c24ac91ff7893dc91f31292bcebc60df4924/rts/Linker.c#L959), which according to `man dlopen` results in `Symbols defined in this shared object are not made available to resolve references in subsequently loaded shared objects.`. It is unclear why this is not a problem on Ubuntu; it is possible that they modified their Python version to detect when it has to re-`dlopen()` itself with `RTLD_GLOBAL`.
+
+To ensure that the Python C library is correctly loaded in your ghci session, use:
+
+```haskell
+import System.Posix.DynamicLinker -- from the `unix` package
+_ <- dlopen "libpython2.7.so" [RTLD_NOW, RTLD_GLOBAL]
+```
+
+before you call any `cpython` functions from ghci.
